@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stark InnovationZ - Premium Invoice</title>
+    <title>Stark InnovationZ - Invoice</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,6 +12,8 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         [contenteditable="true"]:hover {
             background-color: #fef3c7;
@@ -50,7 +52,7 @@
             .print-shadow { box-shadow: none !important; }
             .invoice-container {
                 border: none !important;
-                padding: 0 !important;
+                padding: 0 0 50px 0 !important;
                 min-height: auto !important;
                 height: 100% !important;
             }
@@ -80,9 +82,9 @@
             <div class="flex justify-between items-start border-b-2 border-[#f97316] pb-4 mb-5">
                 <div>
                     <div class="flex items-center gap-3">
-                        <div class="w-11 h-11 bg-[#1e293b] text-white flex items-center justify-center rounded-lg font-bold text-2xl relative">
-                            <span class="text-[#f97316]">S</span>I
-                            <div class="absolute -right-1 -bottom-1 w-3.5 h-3.5 bg-[#f97316] rotate-45 -z-10"></div>
+                        <div class="w-16 h-16 bg-[#1e293b] text-white flex items-center justify-center rounded-lg font-bold text-2xl relative">
+                            <img src="logo.png" alt="Logo" class="w-full h-full object-contain rounded-lg">
+                            <div class="absolute -right-1.5 -bottom-1.5 w-6 h-6 bg-[#f97316] rotate-45 -z-10"></div>
                         </div>
                         <div>
                             <h1 class="text-2xl font-black tracking-wide text-[#1e293b]" contenteditable="true">Stark InnovationZ</h1>
@@ -93,9 +95,9 @@
                 <div class="text-right">
                     <h2 class="text-3xl font-black tracking-tight text-[#1e293b] mb-0.5">INVOICE</h2>
                     <div class="bg-[#1e293b] text-white px-3 py-0.5 rounded text-xs font-bold inline-block" contenteditable="true">
-                        INV-2024-05-001
+                        INV-XXXXXX
                     </div>
-                    <p class="text-[11px] text-gray-500 mt-1">Date: <span contenteditable="true" class="font-semibold text-gray-800">18 May 2024</span></p>
+                    <p class="text-[11px] text-gray-500 mt-1">Date: <span contenteditable="true" class="font-semibold text-gray-800">DD MMM YYYY</span></p>
                 </div>
             </div>
 
@@ -105,8 +107,8 @@
                         <i class="fa-solid fa-user text-[10px] text-[#f97316]"></i> BILL TO
                 </div>
                     <div class="border border-t-0 border-gray-200 p-3 rounded-b-lg text-xs space-y-1 text-gray-600">
-                        <div class="grid grid-cols-3"><span class="font-medium">Client Name</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">Mr. Arjun Kumar</span></span></div>
-                        <div class="grid grid-cols-3"><span class="font-medium">Address</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">45, Business Park, Chennai, India.</span></span></div>
+                        <div class="grid grid-cols-3"><span class="font-medium">Client Name</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">[Client Name]</span></span></div>
+                        <div class="grid grid-cols-3"><span class="font-medium">Address</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">[Client Address]</span></span></div>
                     </div>
                 </div>
 
@@ -115,9 +117,9 @@
                         <i class="fa-solid fa-file-invoice text-[10px] text-[#f97316]"></i> INVOICE DETAILS
                     </div>
                     <div class="border border-t-0 border-gray-200 p-3 rounded-b-lg text-xs space-y-1 text-gray-600">
-                        <div class="grid grid-cols-3"><span class="font-medium">Invoice No.</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">INV-2024-05-011</span></span></div>
-                        <div class="grid grid-cols-3"><span class="font-medium">Invoice Date</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">18 May 2024</span></span></div>
-                        <div class="grid grid-cols-3"><span class="font-medium">Payment Terms</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">Split Payment</span></span></div>
+                        <div class="grid grid-cols-3"><span class="font-medium">Invoice No.</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">INV-XXXXXX</span></span></div>
+                        <div class="grid grid-cols-3"><span class="font-medium">Invoice Date</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">DD MMM YYYY</span></span></div>
+                        <div class="grid grid-cols-3"><span class="font-medium">Payment Terms</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">[Payment Terms]</span></span></div>
                     </div>
                 </div>
             </div>
@@ -150,40 +152,12 @@
                                 </button>
                                 <span class="row-sno">1</span>
                             </td>
-                            <td class="p-2 font-bold text-gray-900 align-middle" contenteditable="true">Hardware</td>
-                            <td class="p-2 text-gray-500 align-middle whitespace-normal break-words" contenteditable="true">Hardware design and development</td>
-                            <td class="p-2 align-middle whitespace-normal break-words" contenteditable="true">As per requirement</td>
-                            <td class="p-2 text-center align-middle qty-cell" contenteditable="true" oninput="calculateRowAmount(this)">1</td>
-                            <td class="p-2 text-right align-middle rate-cell" contenteditable="true" oninput="calculateRowAmount(this)">8,000</td>
-                            <td class="p-2 text-right font-semibold text-gray-900 amount-cell align-middle bg-gray-50 select-none">8,000</td>
-                        </tr>
-                        <tr class="invoice-row hover:bg-orange-50 bg-opacity-20 relative">
-                            <td class="p-2 text-center font-medium relative align-middle">
-                                <button onclick="deleteInvoiceRow(this)" class="no-print no-print-control delete-btn absolute left-0.5 top-1/2 -translate-y-1/2 text-red-500 hover:text-red-700 bg-red-50 p-0.5 rounded transition">
-                                    <i class="fa-solid fa-trash-can text-[10px]"></i>
-                                </button>
-                                <span class="row-sno">2</span>
-                            </td>
-                            <td class="p-2 font-bold text-gray-900 align-middle" contenteditable="true">Website Development</td>
-                            <td class="p-2 text-gray-500 align-middle whitespace-normal break-words" contenteditable="true">Custom website development</td>
-                            <td class="p-2 align-middle whitespace-normal break-words" contenteditable="true">Per Website</td>
-                            <td class="p-2 text-center align-middle qty-cell" contenteditable="true" oninput="calculateRowAmount(this)">1</td>
-                            <td class="p-2 text-right align-middle rate-cell" contenteditable="true" oninput="calculateRowAmount(this)">15,000</td>
-                            <td class="p-2 text-right font-semibold text-gray-900 amount-cell align-middle bg-gray-50 select-none">15,000</td>
-                        </tr>
-                        <tr class="invoice-row hover:bg-orange-50 bg-opacity-20 relative">
-                            <td class="p-2 text-center font-medium relative align-middle">
-                                <button onclick="deleteInvoiceRow(this)" class="no-print no-print-control delete-btn absolute left-0.5 top-1/2 -translate-y-1/2 text-red-500 hover:text-red-700 bg-red-50 p-0.5 rounded transition">
-                                    <i class="fa-solid fa-trash-can text-[10px]"></i>
-                                </button>
-                                <span class="row-sno">3</span>
-                            </td>
-                            <td class="p-2 font-bold text-gray-900 align-middle" contenteditable="true">App Development</td>
-                            <td class="p-2 text-gray-500 align-middle whitespace-normal break-words" contenteditable="true">Mobile application development</td>
-                            <td class="p-2 align-middle whitespace-normal break-words" contenteditable="true">Per App</td>
-                            <td class="p-2 text-center align-middle qty-cell" contenteditable="true" oninput="calculateRowAmount(this)">1</td>
-                            <td class="p-2 text-right align-middle rate-cell" contenteditable="true" oninput="calculateRowAmount(this)">20,000</td>
-                            <td class="p-2 text-right font-semibold text-gray-900 amount-cell align-middle bg-gray-50 select-none">20,000</td>
+                            <td class="p-2 font-bold text-gray-900 align-middle" contenteditable="true">[Category]</td>
+                            <td class="p-2 text-gray-500 align-middle whitespace-normal break-words" contenteditable="true">[Description]</td>
+                            <td class="p-2 align-middle whitespace-normal break-words" contenteditable="true">[Unit]</td>
+                            <td class="p-2 text-center align-middle qty-cell" contenteditable="true" oninput="calculateRowAmount(this)">0</td>
+                            <td class="p-2 text-right align-middle rate-cell" contenteditable="true" oninput="calculateRowAmount(this)">0</td>
+                            <td class="p-2 text-right font-semibold text-gray-900 amount-cell align-middle bg-gray-50 select-none">0</td>
                         </tr>
                     </tbody>
                 </table>
@@ -195,11 +169,11 @@
                         <i class="fa-solid fa-scale-balanced text-sm text-[#f97316]"></i> TERMS & CONDITIONS
                     </div>
                     <div contenteditable="true" class="space-y-0.5 text-gray-600 leading-relaxed">
-                        <p>1. **Pricing Framework:** Payments are calculated based on workload complexity and time taken to complete.</p>
-                        <p>2. **Future Updates & Upgrades:** Any future strategic updates will be notified; feature upgrades attract additional charges.</p>
-                        <p>3. **Bug Fixes:** Any logical errors or code scope bugs will be cleared entirely free of cost.</p>
-                        <p>4. **Delivery Handover:** Product handover will be completed immediately following the full payment processing confirmation.</p>
-                        <p>5. **Verification & Training:** Clients will crosscheck code architecture (Online/Offline) with company walkthroughs before final structural shipment handover.</p>
+                        <p>1. <b>Pricing Framework:</b> Payments are calculated based on workload complexity and time taken to complete.</p>
+                        <p>2. <b>Future Updates & Upgrades:</b> Any future strategic updates will be notified; feature upgrades attract additional charges.</p>
+                        <p>3. <b>Bug Fixes:</b> Any logical errors or code scope bugs will be cleared entirely free of cost.</p>
+                        <p>4. <b>Delivery Handover:</b> Product handover will be completed immediately following the full payment processing confirmation.</p>
+                        <p>5. <b>Verification & Training:</b> Clients will crosscheck code architecture (Online/Offline) with company walkthroughs before final structural shipment handover.</p>
                     </div>
                 </div>
 
@@ -239,8 +213,8 @@
 
                     <div class="col-span-5 text-[11px] space-y-1 text-gray-600">
                         <div class="font-bold text-gray-500 uppercase tracking-wider mb-0.5 select-none">Transaction Details</div>
-                        <div>Transaction ID &nbsp;&nbsp;&nbsp;: <span class="font-mono text-gray-900 text-[10px]" contenteditable="true">UPI-418512345678</span></div>
-                        <div>Transaction Date : <span class="text-gray-900" contenteditable="true">18 May 2024</span></div>
+                        <div>Transaction ID &nbsp;&nbsp;&nbsp;: <span class="font-mono text-gray-900 text-[10px]" contenteditable="true">[Transaction ID]</span></div>
+                        <div>Transaction Date : <span class="text-gray-900" contenteditable="true">DD MMM YYYY</span></div>
                     </div>
 
                     <div class="col-span-3 bg-emerald-500 text-white rounded-xl p-3 text-center shadow border border-emerald-600">
@@ -283,10 +257,6 @@
                     <div class="w-32">
                         <div class="font-serif italic text-lg text-gray-700 border-b border-gray-300 pb-0.5 mb-0.5 px-2 tracking-wide min-h-[28px]" contenteditable="true">Venkat</div>
                         <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider select-none">Co-founder Signature</p>
-                    </div>
-                    <div class="w-32">
-                        <div class="font-serif italic text-lg text-gray-700 border-b border-gray-300 pb-0.5 mb-0.5 px-2 tracking-wide min-h-[28px]" contenteditable="true">Arjun Kumar</div>
-                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider select-none">Authorized Signature</p>
                     </div>
                 </div>
             </div>
