@@ -42,11 +42,11 @@
         @media print {
             @page {
                 size: A4;
-                margin: 0.4in 0.4in 0.4in 0.4in;
+                margin: 0; /* This removes the default browser date, time, and URL */
             }
             body { 
                 background-color: #fff; 
-                padding: 0 !important;
+                padding: 0.4in !important; /* Add padding here to keep the invoice centered */
             }
             .no-print { display: none !important; }
             .print-shadow { box-shadow: none !important; }
@@ -255,7 +255,9 @@
 
                 <div class="w-1/2 flex justify-end gap-8 text-center pt-4">
                     <div class="w-32">
-                        <div class="font-serif italic text-lg text-gray-700 border-b border-gray-300 pb-0.5 mb-0.5 px-2 tracking-wide min-h-[28px]" contenteditable="true">Venkat</div>
+                        <div class="border-b border-gray-300 pb-1 mb-1 px-2 flex justify-center items-end min-h-[40px]">
+                            <img src="Signature.jpeg" alt="Signature" class="max-h-10 object-contain mix-blend-multiply">
+                        </div>
                         <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider select-none">Co-founder Signature</p>
                     </div>
                 </div>
@@ -270,6 +272,15 @@
     </div>
 
     <script>
+        // Prevent rich text pasting in contenteditable elements to keep default styles
+        document.addEventListener('paste', function(e) {
+            if (e.target.isContentEditable) {
+                e.preventDefault();
+                let text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                document.execCommand('insertText', false, text);
+            }
+        });
+
         function togglePreviewMode() {
             const isPreview = document.body.classList.toggle('preview-mode');
             const icon = document.getElementById('previewIcon');
