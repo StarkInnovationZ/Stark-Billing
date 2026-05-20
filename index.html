@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stark InnovationZ - Premium Invoice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        [contenteditable="true"]:hover {
+            background-color: #fef3c7;
+            outline: 1px dashed #f97316;
+            border-radius: 2px;
+        }
+        [contenteditable="true"]:focus {
+            background-color: #fff;
+            outline: 2px solid #f97316;
+            border-radius: 2px;
+        }
+        
+        .invoice-row .delete-btn {
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+        body:not(.preview-mode) .invoice-row:hover .delete-btn {
+            opacity: 1;
+        }
+
+        body.preview-mode .no-print-control {
+            display: none !important;
+        }
+
+        /* Strict Single Page Print Optimization - Height and Overflow Fix */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0.4in 0.4in 0.4in 0.4in;
+            }
+            body { 
+                background-color: #fff; 
+                padding: 0 !important;
+            }
+            .no-print { display: none !important; }
+            .print-shadow { box-shadow: none !important; }
+            .invoice-container {
+                border: none !important;
+                padding: 0 !important;
+                min-height: auto !important;
+                height: 100% !important;
+            }
+            .sticky-strip {
+                position: absolute !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto mb-4 flex justify-end gap-3 no-print select-none">
+        <button id="previewBtn" onclick="togglePreviewMode()" class="bg-gray-600 text-white px-5 py-2 rounded-lg font-semibold shadow hover:bg-gray-700 transition flex items-center gap-2">
+            <i class="fa-solid fa-eye" id="previewIcon"></i> <span id="previewText">Preview Mode</span>
+        </button>
+        <button onclick="window.print()" class="bg-[#f97316] text-white px-5 py-2 rounded-lg font-semibold shadow hover:bg-orange-600 transition flex items-center gap-2">
+            <i class="fa-solid fa-print"></i> Print / Save PDF
+        </button>
+    </div>
+
+    <div class="invoice-container max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100 print-shadow relative pb-20 min-h-[10.5in] flex flex-col justify-between">
+        
+        <div>
+            <div class="flex justify-between items-start border-b-2 border-[#f97316] pb-4 mb-5">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 bg-[#1e293b] text-white flex items-center justify-center rounded-lg font-bold text-2xl relative">
+                            <span class="text-[#f97316]">S</span>I
+                            <div class="absolute -right-1 -bottom-1 w-3.5 h-3.5 bg-[#f97316] rotate-45 -z-10"></div>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-black tracking-wide text-[#1e293b]" contenteditable="true">Stark InnovationZ</h1>
+                            <p class="text-[10px] uppercase font-bold tracking-widest text-[#f97316]" contenteditable="true">Ideas | Innovation | Impact</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <h2 class="text-3xl font-black tracking-tight text-[#1e293b] mb-0.5">INVOICE</h2>
+                    <div class="bg-[#1e293b] text-white px-3 py-0.5 rounded text-xs font-bold inline-block" contenteditable="true">
+                        INV-2024-05-001
+                    </div>
+                    <p class="text-[11px] text-gray-500 mt-1">Date: <span contenteditable="true" class="font-semibold text-gray-800">18 May 2024</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6 mb-5">
+                <div>
+                    <div class="bg-[#1e293b] text-white px-3 py-1 rounded-t-lg text-[11px] font-bold tracking-wider flex items-center gap-2 border-b-2 border-[#f97316]">
+                        <i class="fa-solid fa-user text-[10px] text-[#f97316]"></i> BILL TO
+                </div>
+                    <div class="border border-t-0 border-gray-200 p-3 rounded-b-lg text-xs space-y-1 text-gray-600">
+                        <div class="grid grid-cols-3"><span class="font-medium">Client Name</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">Mr. Arjun Kumar</span></span></div>
+                        <div class="grid grid-cols-3"><span class="font-medium">Address</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">45, Business Park, Chennai, India.</span></span></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="bg-[#1e293b] text-white px-3 py-1 rounded-t-lg text-[11px] font-bold tracking-wider flex items-center gap-2 border-b-2 border-[#f97316]">
+                        <i class="fa-solid fa-file-invoice text-[10px] text-[#f97316]"></i> INVOICE DETAILS
+                    </div>
+                    <div class="border border-t-0 border-gray-200 p-3 rounded-b-lg text-xs space-y-1 text-gray-600">
+                        <div class="grid grid-cols-3"><span class="font-medium">Invoice No.</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">INV-2024-05-011</span></span></div>
+                        <div class="grid grid-cols-3"><span class="font-medium">Invoice Date</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">18 May 2024</span></span></div>
+                        <div class="grid grid-cols-3"><span class="font-medium">Payment Terms</span><span class="col-span-2 text-gray-900">: <span contenteditable="true">Split Payment</span></span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-hidden rounded-lg border border-gray-200 mb-5">
+                <table class="w-full text-left border-collapse table-fixed">
+                    <thead>
+                        <tr class="bg-[#1e293b] text-white text-[10px] uppercase tracking-wider font-bold select-none h-9 border-b-2 border-[#f97316]">
+                            <th class="p-2 text-center align-middle w-[6%]">S.No.</th>
+                            <th class="p-2 align-middle w-[24%]">
+                                <div class="flex items-center justify-between">
+                                    <span>Project Category</span>
+                                    <button onclick="addInvoiceRow()" class="no-print no-print-control bg-[#f97316] hover:bg-orange-600 text-white w-4 h-4 rounded-full flex items-center justify-center transition shadow-sm shrink-0 ml-1">
+                                        <i class="fa-solid fa-plus text-[9px] font-black"></i>
+                                    </button>
+                                </div>
+                            </th>
+                            <th class="p-2 align-middle w-[32%]">Description</th>
+                            <th class="p-2 align-middle w-[15%]">Denomination</th>
+                            <th class="p-2 text-center align-middle w-[6%]">Qty</th>
+                            <th class="p-2 text-right align-middle w-[8%]">Rate (₹)</th>
+                            <th class="p-2 text-right align-middle w-[9%]">Amount (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoiceTableBody" class="text-[11px] divide-y divide-gray-100 text-gray-700">
+                        <tr class="invoice-row hover:bg-orange-50 bg-opacity-20 relative">
+                            <td class="p-2 text-center font-medium relative align-middle">
+                                <button onclick="deleteInvoiceRow(this)" class="no-print no-print-control delete-btn absolute left-0.5 top-1/2 -translate-y-1/2 text-red-500 hover:text-red-700 bg-red-50 p-0.5 rounded transition">
+                                    <i class="fa-solid fa-trash-can text-[10px]"></i>
+                                </button>
+                                <span class="row-sno">1</span>
+                            </td>
+                            <td class="p-2 font-bold text-gray-900 align-middle" contenteditable="true">Hardware</td>
+                            <td class="p-2 text-gray-500 align-middle whitespace-normal break-words" contenteditable="true">Hardware design and development</td>
+                            <td class="p-2 align-middle whitespace-normal break-words" contenteditable="true">As per requirement</td>
+                            <td class="p-2 text-center align-middle qty-cell" contenteditable="true" oninput="calculateRowAmount(this)">1</td>
+                            <td class="p-2 text-right align-middle rate-cell" contenteditable="true" oninput="calculateRowAmount(this)">8,000</td>
+                            <td class="p-2 text-right font-semibold text-gray-900 amount-cell align-middle bg-gray-50 select-none">8,000</td>
+                        </tr>
+                        <tr class="invoice-row hover:bg-orange-50 bg-opacity-20 relative">
+                            <td class="p-2 text-center font-medium relative align-middle">
+                                <button onclick="deleteInvoiceRow(this)" class="no-print no-print-control delete-btn absolute left-0.5 top-1/2 -translate-y-1/2 text-red-500 hover:text-red-700 bg-red-50 p-0.5 rounded transition">
+                                    <i class="fa-solid fa-trash-can text-[10px]"></i>
+                                </button>
+                                <span class="row-sno">2</span>
+                            </td>
+                            <td class="p-2 font-bold text-gray-900 align-middle" contenteditable="true">Website Development</td>
+                            <td class="p-2 text-gray-500 align-middle whitespace-normal break-words" contenteditable="true">Custom website development</td>
+                            <td class="p-2 align-middle whitespace-normal break-words" contenteditable="true">Per Website</td>
+                            <td class="p-2 text-center align-middle qty-cell" contenteditable="true" oninput="calculateRowAmount(this)">1</td>
+                            <td class="p-2 text-right align-middle rate-cell" contenteditable="true" oninput="calculateRowAmount(this)">15,000</td>
+                            <td class="p-2 text-right font-semibold text-gray-900 amount-cell align-middle bg-gray-50 select-none">15,000</td>
+                        </tr>
+                        <tr class="invoice-row hover:bg-orange-50 bg-opacity-20 relative">
+                            <td class="p-2 text-center font-medium relative align-middle">
+                                <button onclick="deleteInvoiceRow(this)" class="no-print no-print-control delete-btn absolute left-0.5 top-1/2 -translate-y-1/2 text-red-500 hover:text-red-700 bg-red-50 p-0.5 rounded transition">
+                                    <i class="fa-solid fa-trash-can text-[10px]"></i>
+                                </button>
+                                <span class="row-sno">3</span>
+                            </td>
+                            <td class="p-2 font-bold text-gray-900 align-middle" contenteditable="true">App Development</td>
+                            <td class="p-2 text-gray-500 align-middle whitespace-normal break-words" contenteditable="true">Mobile application development</td>
+                            <td class="p-2 align-middle whitespace-normal break-words" contenteditable="true">Per App</td>
+                            <td class="p-2 text-center align-middle qty-cell" contenteditable="true" oninput="calculateRowAmount(this)">1</td>
+                            <td class="p-2 text-right align-middle rate-cell" contenteditable="true" oninput="calculateRowAmount(this)">20,000</td>
+                            <td class="p-2 text-right font-semibold text-gray-900 amount-cell align-middle bg-gray-50 select-none">20,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid grid-cols-3 gap-6 mb-5">
+                <div class="col-span-2 border border-gray-200 rounded-lg p-3 text-[10px] text-gray-600 space-y-1 bg-gray-50 bg-opacity-50">
+                    <div class="font-bold text-gray-700 flex items-center gap-1.5 mb-0.5 select-none text-xs">
+                        <i class="fa-solid fa-scale-balanced text-sm text-[#f97316]"></i> TERMS & CONDITIONS
+                    </div>
+                    <div contenteditable="true" class="space-y-0.5 text-gray-600 leading-relaxed">
+                        <p>1. **Pricing Framework:** Payments are calculated based on workload complexity and time taken to complete.</p>
+                        <p>2. **Future Updates & Upgrades:** Any future strategic updates will be notified; feature upgrades attract additional charges.</p>
+                        <p>3. **Bug Fixes:** Any logical errors or code scope bugs will be cleared entirely free of cost.</p>
+                        <p>4. **Delivery Handover:** Product handover will be completed immediately following the full payment processing confirmation.</p>
+                        <p>5. **Verification & Training:** Clients will crosscheck code architecture (Online/Offline) with company walkthroughs before final structural shipment handover.</p>
+                    </div>
+                </div>
+
+                <div class="rounded-lg overflow-hidden border border-gray-200 text-xs">
+                    <div class="flex justify-between items-center p-2.5 bg-[#1e293b] text-white select-none border-b-2 border-[#f97316]">
+                        <span class="font-black tracking-wider uppercase text-[10px]">Total Amount</span>
+                        <span class="text-base font-black text-[#f97316]">₹ <span id="invoiceTotal">0</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-2 border-gray-200 rounded-xl p-4 mb-6 relative">
+                <div class="absolute translate-y-[-28px] left-1/2 transform -translate-x-1/2 bg-[#1e293b] text-white px-5 py-0.5 rounded-full font-bold text-[10px] tracking-wider select-none border border-[#f97316]">
+                    PAYMENT METHOD
+                </div>
+                
+                <div class="grid grid-cols-12 gap-4 items-center pt-1">
+                    <div class="col-span-4 border-r border-gray-200 pr-4 space-y-2 text-[11px]">
+                        <div class="text-gray-500 font-bold mb-0.5 select-none">Cash / UPI Smart Percentage</div>
+                        <div class="flex justify-between items-center bg-gray-50 p-1.5 rounded border border-gray-200">
+                            <span class="flex items-center gap-1.5 font-semibold text-gray-700">
+                                <i class="fa-solid fa-money-bill-wave text-green-600 text-xs"></i> Cash
+                            </span>
+                            <div>
+                                <span id="cashPercent" class="text-gray-900 font-bold border-b border-gray-300 px-1 text-center inline-block min-w-[25px]" contenteditable="true" oninput="balancePercentages('cash')">0</span>
+                                <span class="text-gray-400">%</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-1.5 rounded border border-gray-200">
+                            <span class="flex items-center gap-1.5 font-black italic tracking-tighter text-[#f97316]">UPI</span>
+                            <div>
+                                <span id="upiPercent" class="text-gray-900 font-bold border-b border-gray-300 px-1 text-center inline-block min-w-[25px]" contenteditable="true" oninput="balancePercentages('upi')">100</span>
+                                <span class="text-gray-400">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-5 text-[11px] space-y-1 text-gray-600">
+                        <div class="font-bold text-gray-500 uppercase tracking-wider mb-0.5 select-none">Transaction Details</div>
+                        <div>Transaction ID &nbsp;&nbsp;&nbsp;: <span class="font-mono text-gray-900 text-[10px]" contenteditable="true">UPI-418512345678</span></div>
+                        <div>Transaction Date : <span class="text-gray-900" contenteditable="true">18 May 2024</span></div>
+                    </div>
+
+                    <div class="col-span-3 bg-emerald-500 text-white rounded-xl p-3 text-center shadow border border-emerald-600">
+                        <div class="text-[9px] text-emerald-100 uppercase font-black tracking-wider mb-0.5 select-none">Amount Received</div>
+                        <div class="text-xl font-black text-white drop-shadow-sm">₹ <span id="receivedTotal">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-auto">
+            <div class="flex justify-between items-start border-t border-gray-100 pt-4 mb-4">
+                <div class="w-1/2 space-y-3 text-left">
+                    <div>
+                        <p class="text-sm font-medium text-gray-800 italic" contenteditable="true">Thank you for choosing us!</p>
+                    </div>
+                    
+                    <div class="text-[11px] text-gray-600 space-y-0.5">
+                        <div class="font-bold text-[#1e293b] flex items-center gap-1.5 uppercase tracking-wider select-none mb-0.5 text-xs">
+                            <i class="fa-solid fa-building text-xs text-[#f97316]"></i> Contact Us
+                        </div>
+                        <p class="font-bold text-gray-900 text-xs" contenteditable="true">Stark InnovationZ</p>
+                        <p class="text-[9px] text-gray-400 font-mono" contenteditable="true">UDYAM-TN-0079277</p>
+                        <p class="text-gray-700" contenteditable="true">
+                            <i class="fa-solid fa-phone text-gray-400 mr-1 text-[9px]"></i> +91 9486043621 | +91 9442879062
+                        </p>
+                        <p class="text-gray-700" contenteditable="true">
+                            <i class="fa-solid fa-envelope text-gray-400 mr-1 text-[9px]"></i> office.starkinnovationz@gmail.com
+                        </p>
+                        <p class="text-orange-600 font-medium break-all">
+                            <i class="fa-solid fa-globe text-gray-400 mr-1 text-[9px]"></i> <a href="https://stark-innovationz.netlify.app/" target="_blank" class="hover:underline">https://stark-innovationz.netlify.app/</a>
+                        </p>
+                        <p class="text-[10px] text-[#f97316] font-medium italic pt-0.5" contenteditable="true">
+                            <i class="fa-solid fa-star text-[9px] mr-1"></i> Please put your valuable feedback and works in review on our website!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="w-1/2 flex justify-end gap-8 text-center pt-4">
+                    <div class="w-32">
+                        <div class="font-serif italic text-lg text-gray-700 border-b border-gray-300 pb-0.5 mb-0.5 px-2 tracking-wide min-h-[28px]" contenteditable="true">Venkat</div>
+                        <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider select-none">Co-founder Signature</p>
+                    </div>
+                    <div class="w-32">
+                        <div class="font-serif italic text-lg text-gray-700 border-b border-gray-300 pb-0.5 mb-0.5 px-2 tracking-wide min-h-[28px]" contenteditable="true">Arjun Kumar</div>
+                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-wider select-none">Authorized Signature</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sticky-strip absolute bottom-0 left-0 right-0 bg-[#1e293b] text-white py-1.5 px-8 flex justify-between text-[9px] font-bold uppercase tracking-widest rounded-b-xl select-none border-t border-[#f97316]">
+                <div><i class="fa-solid fa-lightbulb text-[#f97316]"></i> Innovate</div>
+                <div><i class="fa-solid fa-code text-[#f97316]"></i> Develop</div>
+                <div><i class="fa-solid fa-rocket text-[#f97316]"></i> Deliver</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePreviewMode() {
+            const isPreview = document.body.classList.toggle('preview-mode');
+            const icon = document.getElementById('previewIcon');
+            const btnText = document.getElementById('previewText');
+            const btn = document.getElementById('previewBtn');
+
+            if (isPreview) {
+                icon.className = 'fa-solid fa-pen';
+                btnText.textContent = 'Edit Mode';
+                btn.className = 'bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold shadow hover:bg-blue-700 transition flex items-center gap-2';
+            } else {
+                icon.className = 'fa-solid fa-eye';
+                btnText.textContent = 'Preview Mode';
+                btn.className = 'bg-gray-600 text-white px-5 py-2 rounded-lg font-semibold shadow hover:bg-gray-700 transition flex items-center gap-2';
+            }
+        }
+
+        function calculateRowAmount(element) {
+            const row = element.closest('.invoice-row');
+            const qtyText = row.querySelector('.qty-cell').textContent.replace(/[^0-9.]/g, '');
+            const rateText = row.querySelector('.rate-cell').textContent.replace(/[^0-9.]/g, '');
+            
+            const qty = parseFloat(qtyText) || 0;
+            const rate = parseFloat(rateText) || 0;
+            
+            const amount = qty * rate;
+            row.querySelector('.amount-cell').textContent = amount.toLocaleString('en-IN');
+            
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            const amountCells = document.querySelectorAll('.amount-cell');
+            
+            amountCells.forEach(cell => {
+                let valText = cell.textContent.replace(/[^0-9.]/g, '');
+                let parsedVal = parseFloat(valText);
+                if (!isNaN(parsedVal)) {
+                    total += parsedVal;
+                }
+            });
+
+            let formattedTotal = total.toLocaleString('en-IN');
+            document.getElementById('invoiceTotal').textContent = formattedTotal;
+            document.getElementById('receivedTotal').textContent = formattedTotal;
+        }
+
+        function balancePercentages(source) {
+            const cashField = document.getElementById('cashPercent');
+            const upiField = document.getElementById('upiPercent');
+            
+            let cashVal = parseInt(cashField.textContent.replace(/[^0-9]/g, '')) || 0;
+            let upiVal = parseInt(upiField.textContent.replace(/[^0-9]/g, '')) || 0;
+
+            if (source === 'cash') {
+                if (cashVal > 100) { cashVal = 100; cashField.textContent = 100; }
+                if (cashVal < 0) { cashVal = 0; cashField.textContent = 0; }
+                upiField.textContent = 100 - cashVal;
+            } else if (source === 'upi') {
+                if (upiVal > 100) { upiVal = 100; upiField.textContent = 100; }
+                if (upiVal < 0) { upiVal = 0; upiField.textContent = 0; }
+                cashField.textContent = 100 - upiVal;
+            }
+        }
+
+        function updateSerialNumbers() {
+            const rows = document.querySelectorAll('#invoiceTableBody .invoice-row');
+            rows.forEach((row, index) => {
+                const snoSpan = row.querySelector('.row-sno');
+                if (snoSpan) snoSpan.textContent = index + 1;
+            });
+        }
+
+        function addInvoiceRow() {
+            const tbody = document.getElementById('invoiceTableBody');
+            const newRow = document.createElement('tr');
+            newRow.className = 'invoice-row hover:bg-orange-50 bg-opacity-20 relative';
+            newRow.innerHTML = `
+                <td class="p-2 text-center font-medium relative align-middle">
+                    <button onclick="deleteInvoiceRow(this)" class="no-print no-print-control delete-btn absolute left-0.5 top-1/2 -translate-y-1/2 text-red-500 hover:text-red-700 bg-red-50 p-0.5 rounded transition">
+                        <i class="fa-solid fa-trash-can text-[10px]"></i>
+                    </button>
+                    <span class="row-sno"></span>
+                </td>
+                <td class="p-2 font-bold text-gray-900 align-middle" contenteditable="true">New Category</td>
+                <td class="p-2 text-gray-500 align-middle whitespace-normal break-words" contenteditable="true">Description</td>
+                <td class="p-2 align-middle whitespace-normal break-words" contenteditable="true">Per Unit</td>
+                <td class="p-2 text-center align-middle qty-cell" contenteditable="true" oninput="calculateRowAmount(this)">1</td>
+                <td class="p-2 text-right align-middle rate-cell" contenteditable="true" oninput="calculateRowAmount(this)">0</td>
+                <td class="p-2 text-right font-semibold text-gray-900 amount-cell align-middle bg-gray-50 select-none">0</td>
+            `;
+            tbody.appendChild(newRow);
+            updateSerialNumbers();
+            calculateTotal();
+        }
+
+        function deleteInvoiceRow(buttonElement) {
+            const row = buttonElement.closest('.invoice-row');
+            if (row) {
+                row.remove();
+                updateSerialNumbers();
+                calculateTotal();
+            }
+        }
+
+        // Run full setup initial sync
+        document.querySelectorAll('#invoiceTableBody .invoice-row').forEach(row => {
+            const qty = parseFloat(row.querySelector('.qty-cell').textContent) || 0;
+            const rate = parseFloat(row.querySelector('.rate-cell').textContent.replace(/[^0-9.]/g, '')) || 0;
+            row.querySelector('.amount-cell').textContent = (qty * rate).toLocaleString('en-IN');
+        });
+        calculateTotal();
+    </script>
+</body>
+</html>
