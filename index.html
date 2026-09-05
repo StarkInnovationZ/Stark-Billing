@@ -192,20 +192,48 @@
                 
                 <div class="grid grid-cols-12 gap-4 items-center pt-1">
                     <div class="col-span-4 border-r border-gray-200 pr-4 space-y-2 text-[11px]">
-                        <div class="text-gray-500 font-bold mb-0.5 select-none">Cash / UPI Smart Percentage</div>
+                        <div class="text-gray-500 font-bold mb-0.5 select-none">
+                            Cash / UPI / Bank Smart Percentage
+                        </div>
+
+                        <!-- Cash -->
                         <div class="flex justify-between items-center bg-gray-50 p-1.5 rounded border border-gray-200">
                             <span class="flex items-center gap-1.5 font-semibold text-gray-700">
                                 <i class="fa-solid fa-money-bill-wave text-green-600 text-xs"></i> Cash
                             </span>
                             <div>
-                                <span id="cashPercent" class="text-gray-900 font-bold border-b border-gray-300 px-1 text-center inline-block min-w-[25px]" contenteditable="true" oninput="balancePercentages('cash')">0</span>
+                                <span id="cashPercent"
+                                    class="text-gray-900 font-bold border-b border-gray-300 px-1 text-center inline-block min-w-[25px]"
+                                    contenteditable="true"
+                                    oninput="balancePercentages('cash')">100</span>
                                 <span class="text-gray-400">%</span>
                             </div>
                         </div>
+
+                        <!-- UPI -->
                         <div class="flex justify-between items-center bg-gray-50 p-1.5 rounded border border-gray-200">
-                            <span class="flex items-center gap-1.5 font-black italic tracking-tighter text-[#f97316]">UPI</span>
+                            <span class="flex items-center gap-1.5 font-black italic tracking-tighter text-[#f97316]">
+                                UPI
+                            </span>
                             <div>
-                                <span id="upiPercent" class="text-gray-900 font-bold border-b border-gray-300 px-1 text-center inline-block min-w-[25px]" contenteditable="true" oninput="balancePercentages('upi')">100</span>
+                                <span id="upiPercent"
+                                    class="text-gray-900 font-bold border-b border-gray-300 px-1 text-center inline-block min-w-[25px]"
+                                    contenteditable="true"
+                                    oninput="balancePercentages('upi')">0</span>
+                                <span class="text-gray-400">%</span>
+                            </div>
+                        </div>
+
+                        <!-- Bank -->
+                        <div class="flex justify-between items-center bg-gray-50 p-1.5 rounded border border-gray-200">
+                            <span class="flex items-center gap-1.5 font-semibold text-gray-700">
+                                <i class="fa-solid fa-building-columns text-blue-600 text-xs"></i> Bank
+                            </span>
+                            <div>
+                                <span id="bankPercent"
+                                    class="text-gray-900 font-bold border-b border-gray-300 px-1 text-center inline-block min-w-[25px]"
+                                    contenteditable="true"
+                                    oninput="balancePercentages('bank')">0</span>
                                 <span class="text-gray-400">%</span>
                             </div>
                         </div>
@@ -330,21 +358,59 @@
         }
 
         function balancePercentages(source) {
-            const cashField = document.getElementById('cashPercent');
-            const upiField = document.getElementById('upiPercent');
-            
-            let cashVal = parseInt(cashField.textContent.replace(/[^0-9]/g, '')) || 0;
-            let upiVal = parseInt(upiField.textContent.replace(/[^0-9]/g, '')) || 0;
+            const fields = {
+                cash: document.getElementById('cashPercent'),
+                upi: document.getElementById('upiPercent'),
+                bank: document.getElementById('bankPercent')
+            };
 
-            if (source === 'cash') {
-                if (cashVal > 100) { cashVal = 100; cashField.textContent = 100; }
-                if (cashVal < 0) { cashVal = 0; cashField.textContent = 0; }
-                upiField.textContent = 100 - cashVal;
-            } else if (source === 'upi') {
-                if (upiVal > 100) { upiVal = 100; upiField.textContent = 100; }
-                if (upiVal < 0) { upiVal = 0; upiField.textContent = 0; }
-                cashField.textContent = 100 - upiVal;
+            // Get current values with up to 2 decimals
+            let values = {
+                cash: parseFloat(fields.cash.textContent.replace(/[^0-9.]/g, '')) || 0,
+                upi: parseFloat(fields.upi.textContent.replace(/[^0-9.]/g, '')) || 0,
+                bank: parseFloat(fields.bank.textContent.replace(/[^0-9.]/g, '')) || 0
+            };
+
+            // Keep source between 0 and 100
+            values[source] = Math.max(0, Math.min(100, values[source]));
+
+            const remaining = 100 - values[source];
+
+            const otherKeys = Object.keys(values).filter(key => key !== source);
+
+            const otherTotal = otherKeys.reduce(
+                (sum, key) => sum + values[key],
+                0
+            );
+
+            // Distribute remaining percentage between the other two
+            if (otherTotal > 0) {
+                otherKeys.forEach(key => {
+                    values[key] = (values[key] / otherTotal) * remaining;
+                });
+            } else {
+                // If both others are 0, split equally
+                values[otherKeys[0]] = remaining / 2;
+                values[otherKeys[1]] = remaining / 2;
             }
+
+            // Round to 2 decimal places
+            values.cash = parseFloat(values.cash.toFixed(2));
+            values.upi = parseFloat(values.upi.toFixed(2));
+            values.bank = parseFloat(values.bank.toFixed(2));
+
+            // Fix rounding difference so total is exactly 100.00
+            const total = values.cash + values.upi + values.bank;
+            const difference = parseFloat((100 - total).toFixed(2));
+
+            values[source] = parseFloat(
+                (values[source] + difference).toFixed(2)
+            );
+
+            // Update fields
+            fields.cash.textContent = values.cash.toFixed(2);
+            fields.upi.textContent = values.upi.toFixed(2);
+            fields.bank.textContent = values.bank.toFixed(2);
         }
 
         function updateSerialNumbers() {
